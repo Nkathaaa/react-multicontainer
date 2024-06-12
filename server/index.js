@@ -23,7 +23,7 @@ const redis = require('redis');
 const redisClient = redis.createClient({
   host: keys.redisHost,
   port: keys.redisPort,
-  retry_strategy: () => 1000,
+  retry_strategy: () => 10000,
 });
 const redisPublisher = redisClient.duplicate();
 
@@ -84,9 +84,9 @@ app.post('/values', async (req, res) => {
 
 
 
-module.exports = {
-  query: (text, params) => pgClient.query(text, params),
-};
+//module.exports = {
+  //query: (text, params) => pgClient.query(text, params),
+//};
 app.get('/users', async (req, res) => {
   try {
     const result = await pgClient.query('SELECT * FROM users');
