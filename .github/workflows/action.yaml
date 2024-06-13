@@ -1,0 +1,44 @@
+name: Deploy React to AWS
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Docker Login
+        uses: docker/login-action@v1.8.0
+        with:
+          username: ${{secrets.DOCKERHUB_USERNAME}}
+          password: ${{secrets.DOCKERHUB_TOKEN}}
+      - name: build docker image
+        run: |
+             docker build -t nkathad/docker-react -f Dockerfile.dev .   
+      - name: Push to dockerhub
+        run: docker push nkathad/docker-react 
+      - name:   Run test
+        run: docker run nkathad/docker-react npm run test -- --coverage    
+        
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x '*.git*'
+
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: docker-react1
+          environment_name: Docker-react-env2 
+          version_label: ${{ github.sha }}
+          region: us-east-1
+          deployment_package: deploy.zip
+
