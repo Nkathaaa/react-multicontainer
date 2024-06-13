@@ -15,5 +15,5 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       - name: Verify Dockerfile.dev exists
-        run: ls ./client/Dockerfile.dev
+        run: ls /client/Dockerfile.dev
     
