@@ -1,4 +1,4 @@
-name: Deploy React to AWS
+name: Deploy React to AWS much faster
 on:
   push:
     branches:
