@@ -16,7 +16,7 @@ jobs:
           password: ${{secrets.DOCKERHUB_TOKEN}}
       - name: build docker image
         run: |
-             docker build -t nkathad/docker-react -f Dockerfile.dev .   
+             docker build -t nkathad/docker-react -f Dockerfile  
       - name: Push to dockerhub
         run: docker push nkathad/docker-react 
       - name:   Run test
