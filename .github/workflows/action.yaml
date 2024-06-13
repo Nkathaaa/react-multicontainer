@@ -14,6 +14,17 @@ jobs:
       - name: Build Docker image to test
         run: |
           docker build -t nkathad/docker-react -f ./client/Dockerfile.dev ./client  
-      - name: Verify Dockerfile.dev exists
-        run: ls /client/Dockerfile.dev
-    
+          docker run  nkathad/docker-react npm test -- --coverage
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image to test
+        run: |
+          docker build -t nkathad/docker-react1 -f ./client/Dockerfile ./client
+          docker build -t nkathad/docker-react1 -f ./client/Dockerfile.dev ./client  
+           
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+            username: ${{ secrets.DOCKER_USERNAME }}
+            password: ${{ secrets.DOCKER_PASSWORD }}
