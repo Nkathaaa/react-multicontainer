@@ -9,18 +9,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Docker Login
-        uses: docker/login-action@v1.8.0
-        with:
-          username: ${{secrets.DOCKERHUB_USERNAME}}
-          password: ${{secrets.DOCKERHUB_TOKEN}}
-      - name: build docker image
+      - name: build docker image to test 1
         run: |
-             docker build -t nkathad/docker-react -f Dockerfile.dev .   
-      - name: Push to dockerhub
-        run: docker push nkathad/docker-react 
-      - name:   Run test
-        run: docker run nkathad/docker-react npm run test -- --coverage    
+             docker build -t nkathad/docker-react -f ./client/Dockerfile.dev .   
+             docker run  nkathad/docker-react npm test -- --coverage
+  
 
 
         
