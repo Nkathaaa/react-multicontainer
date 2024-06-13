@@ -11,9 +11,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+      - name: Build Docker image to test
+        run: |
+          docker build -t nkathad/docker-react -f ./client/Dockerfile.dev ./client  
       - name: Verify Dockerfile.dev exists
         run: ls /client/Dockerfile.dev
     
