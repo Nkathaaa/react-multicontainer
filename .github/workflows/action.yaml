@@ -14,14 +14,16 @@ jobs:
       - name: Build Docker image to test
         run: |
           docker build -t nkathad/docker-react -f ./client/Dockerfile.dev ./client  
-          docker run  nkathad/docker-react npm test -- --coverage
+      
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Build Docker image to test
+      - name: Build Docker image for prod
         run: |
-          docker build -t nkathad/docker-react1 -f ./client/Dockerfile ./client
-          docker build -t nkathad/docker-react1 -f ./client/Dockerfile.dev ./client  
+          docker build -t nkathad/multiclient -f ./client/Dockerfile ./client
+          docker build -t nkathad/multinginx -f ./nginx/Dockerfile ./nginx 
+          docker build -t nkathad/multiserver -f ./server/Dockerfile ./server 
+          docker build -t nkathad/multiworker -f ./worker/Dockerfile ./worker  
            
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -29,4 +31,8 @@ jobs:
             username: ${{ secrets.DOCKER_USERNAME }}
             password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Push to dockerhub
-        run: docker push nkathad/docker-react
+        run: |
+          docker push nkathad/multiclient
+          docker push nkathad/multinginx
+          docker push nkathad/multiserver
+          docker push nkathad/multiworker
