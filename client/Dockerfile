@@ -3,8 +3,7 @@ WORKDIR "/app"
 COPY ./package.json ./
 RUN npm set registry https://registry.yarnpkg.com && npm install
 COPY . .
-CMD ["npm","start"]
-
+CMD ["npm","run","build"]
 
 FROM nginx
 EXPOSE 3000
