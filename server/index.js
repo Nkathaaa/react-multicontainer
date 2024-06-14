@@ -18,6 +18,24 @@ const pgClient = new Pool({
   port: keys.pgPort,
 });
 
+pgClient.on('error', () => console.log('Lost PG connection'));
+
+const createValuesTable = `
+CREATE TABLE IF NOT EXISTS values (
+  id SERIAL PRIMARY KEY,
+  number INT
+);
+`;
+
+pgClient
+  .query(createValuesTable)
+  .then(res => {
+    console.log('Values table is successfully created');
+  })
+  .catch(err => {
+    console.error('Error creating values table', err);
+  });
+
 // Redis Client Setup
 const redis = require('redis');
 const redisClient = redis.createClient({
@@ -28,42 +46,26 @@ const redisClient = redis.createClient({
 const redisPublisher = redisClient.duplicate();
 
 // Express route handlers
-const createValuesTable = `
-CREATE TABLE IF NOT EXISTS users (
-  id SERIAL PRIMARY KEY
-  
-);
-`;
-/** 
-pgClient.query(createUsersTable)
-  .then(res => {
-    console.log('Users table is successfully created');
-   
-  })
-  .catch(err => {
-    console.error('Error creating users table', err);
-    
-  });
-  **/
-pgClient.on('connect', () => {
-  console.log('connected to db')
-  pgClient
-      .query(createValuesTable)
-    .catch((err) => console.log(err,"this is it"));
-});
-;
 app.get('/', (req, res) => {
   res.send('Hi');
 });
 
 app.get('/values/all', async (req, res) => {
-  const values = await pgClient.query('SELECT * from values');
-
-  res.send(values.rows);
+  try {
+    const values = await pgClient.query('SELECT * from values');
+    res.send(values.rows);
+  } catch (err) {
+    console.error('Error fetching values from database', err);
+    res.status(500).send(err);
+  }
 });
 
 app.get('/values/current', async (req, res) => {
   redisClient.hgetall('values', (err, values) => {
+    if (err) {
+      console.error('Error fetching values from Redis', err);
+      return res.status(500).send(err);
+    }
     res.send(values);
   });
 });
@@ -77,25 +79,18 @@ app.post('/values', async (req, res) => {
 
   redisClient.hset('values', index, 'Nothing yet!');
   redisPublisher.publish('insert', index);
-  pgClient.query('INSERT INTO values(number) VALUES($1)', [index]);
-
-  res.send({ working: true });
+  pgClient.query('INSERT INTO values(number) VALUES($1)', [index])
+    .then(() => {
+      res.send({ working: true });
+    })
+    .catch(err => {
+      console.error('Error inserting value into database', err);
+      res.status(500).send(err);
+    });
 });
 
-
-
-//module.exports = {
-  //query: (text, params) => pgClient.query(text, params),
-//};
-app.get('/users', async (req, res) => {
-  try {
-    const result = await pgClient.query('SELECT * FROM users');
-    res.json(result.rows);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
-  }
-});
-app.listen(5000, (err) => {
-  console.log('Listening');
+// Start the server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
 });
