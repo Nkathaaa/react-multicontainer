@@ -20,10 +20,10 @@ jobs:
 
       - name: Build Docker image for prod
         run: |
-          docker build -t nkathad/multiclient -f ./client/Dockerfile ./client
-          docker build -t nkathad/multinginx -f ./nginx/Dockerfile ./nginx 
-          docker build -t nkathad/multiserver -f ./server/Dockerfile ./server 
-          docker build -t nkathad/multiworker -f ./worker/Dockerfile ./worker  
+          docker build -t nkathad-multiclient -f ./client/Dockerfile ./client
+          docker build -t nkathad-multinginx -f ./nginx/Dockerfile ./nginx 
+          docker build -t nkathad-multiserver -f ./server/Dockerfile ./server 
+          docker build -t nkathad-multiworker -f ./worker/Dockerfile ./worker  
            
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -32,7 +32,7 @@ jobs:
             password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Push to dockerhub
         run: |
-          docker push nkathad/multiclient
-          docker push nkathad/multinginx
-          docker push nkathad/multiserver
-          docker push nkathad/multiworker
+          docker push nkathad-multiclient
+          docker push nkathad-multinginx
+          docker push nkathad-multiserver
+          docker push nkathad-multiworker
