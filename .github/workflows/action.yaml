@@ -17,23 +17,22 @@ jobs:
       
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-
-      - name: Build Docker image for prod
-        run: |
-          docker build -t nkathad/multiclient -f ./client/Dockerfile ./client
-          docker build -t nkathad/multinginx -f ./nginx/Dockerfile ./nginx 
-          docker build -t nkathad/multiserver -f ./server/Dockerfile ./server 
-          docker build -t nkathad/multiworker -f ./worker/Dockerfile ./worker  
-           
+  
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
             username: ${{ secrets.DOCKERHUB_USERNAME }}
             password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build Docker image for prod
+        run: |
+             docker build -t nkathad/multi-client -f ./client/Dockerfile ./client
+             docker build -t nkathad/multi-nginx -f ./nginx/Dockerfile ./nginx 
+             docker build -t nkathad/multi-server -f ./server/Dockerfile ./server 
+             docker build -t nkathad/multi-worker -f ./worker/Dockerfile ./worker      
       - name: Push to dockerhub
         run: |
-          docker push nkathad/multiclient
-          docker push nkathad/multinginx
-          docker push nkathad/multiserver
-          docker push nkathad/multiworker
+          docker push nkathad/multi-client
+          docker push nkathad/multi-nginx
+          docker push nkathad/multi-server
+          docker push nkathad/multi-worker
          
