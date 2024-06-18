@@ -25,14 +25,14 @@ jobs:
             password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build Docker image for prod
         run: |
-             docker build -t nkathad/multi-client -f ./client/Dockerfile ./client
-             docker build -t nkathad/multi-nginx -f ./nginx/Dockerfile ./nginx 
-             docker build -t nkathad/multi-server -f ./server/Dockerfile ./server 
-             docker build -t nkathad/multi-worker -f ./worker/Dockerfile ./worker      
+             docker build -t nkathad/multiclient -f ./client/Dockerfile ./client
+             docker build -t nkathad/multinginx -f ./nginx/Dockerfile ./nginx 
+             docker build -t nkathad/multiserver -f ./server/Dockerfile ./server 
+             docker build -t nkathad/multiworker -f ./worker/Dockerfile ./worker      
       - name: Push to dockerhub
         run: |
-          docker push 8753/multi-client:latest
-          docker push 8753/multi-nginx:latest
-          docker push 8753/multi-server:latest
-          docker push 8753/multi-worker:latest
+          docker push 8753/multiclient
+          docker push 8753/multinginx
+          docker push 8753/multiserver
+          docker push 8753/multiworker
          
