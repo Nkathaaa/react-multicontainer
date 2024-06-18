@@ -36,5 +36,4 @@ jobs:
           docker push nkathad-multinginx
           docker push nkathad-multiserver
           docker push nkathad-multiworker
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+         
