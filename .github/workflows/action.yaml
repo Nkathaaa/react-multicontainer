@@ -31,8 +31,8 @@ jobs:
              docker build -t nkathad/multi-worker -f ./worker/Dockerfile ./worker      
       - name: Push to dockerhub
         run: |
-          docker push nkathad/multi-client
-          docker push nkathad/multi-nginx
-          docker push nkathad/multi-server
-          docker push nkathad/multi-worker
+          docker push 8753/multi-client:latest
+          docker push 8753/multi-nginx:latest
+          docker push 8753/multi-server:latest
+          docker push 8753/multi-worker:latest
          
