@@ -31,7 +31,7 @@ jobs:
              docker build -t nkathad/multiworker -f ./worker/Dockerfile ./worker      
       - name: Push to dockerhub
         run: |
-          docker push 8753/multiclient
+          docker push 8753/multiclient:latest
           docker push 8753/multinginx
           docker push 8753/multiserver
           docker push 8753/multiworker
