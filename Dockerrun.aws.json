@@ -1,6 +1,7 @@
 {
     "AWSEBDockerrunVersion": 3,
     "containerDefinitions": [
+        {
             "name": "client",
              "image":"8753/multiclient:latest",
              "hostname": "client",
