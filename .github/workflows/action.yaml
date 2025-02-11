@@ -31,7 +31,18 @@ jobs:
           docker push 8753/multinginx
           docker push 8753/multiserver
           docker push 8753/multiworker
-      - name: Deploy to EB
+     
+      - name: Generate Deployment Package
+        run: zip -r deploy.zip Dockerrun.aws.json
+
+      - name: Upload Deployment Package to S3
+        run: |
+          aws s3 cp deploy.zip s3://elasticbeanstalk-us-east-1-216989099573/multi-docker-v44.zip --region us-east-1
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -40,6 +51,10 @@ jobs:
           environment_name: Multi-docker-env
           version_label: "v${{ github.run_number }}"
           region: us-east-1
-          existing_bucket_name: elasticbeanstalk-us-east-1-216989099573
+          s3_bucket: elasticbeanstalk-us-east-1-216989099573
+          deployment_package: multi-docker-v44.zip
+          wait_for_deployment: true
+          
+      
              
          
