@@ -51,7 +51,7 @@ jobs:
           environment_name: Multi-docker-env
           version_label: "v${{ github.run_number }}"
           region: us-east-1
-          s3_bucket: elasticbeanstalk-us-east-1-216989099573
+          existing_bucket_name: elasticbeanstalk-us-east-1-216989099573
           deployment_package: multi-docker-v44.zip
           wait_for_deployment: true
           
