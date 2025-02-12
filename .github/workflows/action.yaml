@@ -49,7 +49,7 @@ jobs:
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           application_name: multi-docker
           environment_name: Multi-docker-env
-          version_label: v50
+          version_label: v51
           region: us-east-1
           existing_bucket_name: elasticbeanstalk-us-east-1-216989099573
           deployment_package: multi-docker-v50.zip
